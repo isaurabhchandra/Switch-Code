@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+
+
+import Loginform from './component/Loginform';
+import About from './component/About';
+import Signup from './component/Signup';
+import Navbar from './component/Navbar';
+import Mainpage from './component/Mainpage';
+import { Route,Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { auth } from './component/Firebase';
 
 function App() {
+  const [userName,setUserName] =useState(" ");
+useEffect(()=>{
+  auth.onAuthStateChanged((user)=>{
+
+    if(user){
+     setUserName(user.displayName) 
+    } else setUserName(" ");
+   
+
+  });
+},[]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+   
+<>
+<Navbar/>
+<Routes>
+<Route path = "/" element = {<Loginform/>} />
+<Route path ="/About" element ={<About/>} />
+<Route path = "/Signup" element = {<Signup/>} />
+<Route path = "/Mainpage" element = {<Mainpage name ={userName}/>} />
+
+</Routes>
+
+
+
+</>
+  
+
+  )
+
 }
 
 export default App;

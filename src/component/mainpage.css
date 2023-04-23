@@ -1,0 +1,10 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.main{
+    background-color: rgb(18, 17, 17);
+    color: rgb(236, 224, 224);
+    height: 94vh;
+}

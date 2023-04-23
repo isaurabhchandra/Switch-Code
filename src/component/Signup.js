@@ -1,0 +1,123 @@
+import React, { useState } from "react";
+import "./signup.css";
+import { Link,useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword,updateProfile } from "firebase/auth";
+import { auth } from "./Firebase";
+
+export default function Signup() {
+
+const navigate =useNavigate();
+
+  const [values,setValues] = useState({
+name: "",
+email: "",
+phone:"",
+password:"",
+cnfpassword:"",
+  });
+
+  const[errorMsg,setErrorMsg] = useState("");
+  const[submitButtonDisabled,setSubmitButtonDisabled] = useState(false);
+
+  const handleSubmission=() =>{
+    
+    if(!values.name || !values.email || !values.phone || !values.password || !values.cnfpassword ){
+      setErrorMsg("Please Fill All Field");
+      return;
+    }
+    setErrorMsg("");
+
+    setSubmitButtonDisabled(true);
+
+createUserWithEmailAndPassword(auth,values.email, values.password,values.name,values.phone,values.cnfpassword)
+.then(async(res) =>{
+ 
+ 
+  const user = res.user;
+  const name = res.user.name;
+  const email = res.user.email;
+  const phone = res.user.phone;
+  const password = res.user.password;
+
+
+  localStorage.setItem("name", name);
+  localStorage.setItem("email", email);
+  localStorage.setItem("phone", phone);
+  localStorage.setItem("password", password);
+
+
+  setSubmitButtonDisabled(false);
+
+   await updateProfile(user,{
+    displayName: values.name,
+  });
+
+ navigate("/Mainpage")
+})
+.catch((error) => {
+  setErrorMsg(error.message);
+
+});
+  
+
+};
+
+
+return (
+    <div className="signup-page">
+      <div className="signuptext">
+        <h1>Welcome to Our Community</h1>
+      </div>
+      <div className="signup">
+        <h1>SignUp</h1>
+        <form>
+          <div className="username">
+            <input type="name" placeholder="Name" onChange ={(event) =>
+           setValues((prev) =>({...prev,name:event.target.value}) ) 
+            }></input>
+          </div>
+
+          <div className="email">
+            <input type="email" placeholder="Email" onChange ={(event) =>
+           setValues((prev) =>({...prev,email:event.target.value}) ) 
+            }></input>
+          </div>
+
+          <div className="phone">
+            <input type="phone" placeholder="Phone" onChange ={(event) =>
+           setValues((prev) =>({...prev,phone:event.target.value}) ) 
+            }></input>
+          </div>
+
+          <div className="password">
+            <input type="password" placeholder="Password" onChange ={(event) =>
+           setValues((prev) =>({...prev,password:event.target.value}) ) 
+            }></input>
+          </div>
+
+          <div className="cnfpassword">
+            <input type="password" placeholder="Confirm Password" onChange ={(event) =>
+           setValues((prev) =>({...prev,cnfpassword:event.target.value}) ) 
+            }>
+              
+            </input>
+          </div>
+          <div className="signup-btn">
+            <b>{errorMsg}</b>
+            <button
+              type="button"
+              className="signupbtn" onClick={handleSubmission} disabled ={submitButtonDisabled}>
+              SignUp
+            </button>
+          </div>
+        </form>
+        <div className="existinguser">
+          <p>Already A Member</p>
+          <Link to="/" className="existing-login">
+            LogIn
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
