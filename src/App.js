@@ -8,16 +8,19 @@ import Mainpage from './component/Mainpage';
 import { Route,Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { auth } from './component/Firebase';
+import WebDev from './component/WebDev'
+import Coding from './component/Coding'
 
 function App() {
   const [userName,setUserName] =useState(" ");
+  const [displayNav,setDisplayNav]=useState(true);
 useEffect(()=>{
   auth.onAuthStateChanged((user)=>{
 
     if(user){
      setUserName(user.displayName) 
     } else setUserName(" ");
-   
+   console.log(user)
 
   });
 },[]);
@@ -25,13 +28,15 @@ useEffect(()=>{
   return (
    
 <>
-<Navbar/>
+
+<Navbar displayNav={displayNav}/>
 <Routes>
-<Route path = "/" element = {<Loginform/>} />
+<Route path = "/" element = {<Loginform setDisplayNav={setDisplayNav}/>} />
 <Route path ="/About" element ={<About/>} />
 <Route path = "/Signup" element = {<Signup/>} />
 <Route path = "/Mainpage" element = {<Mainpage name ={userName}/>} />
-
+<Route path='/WebDev' element={<WebDev setDisplayNav={setDisplayNav}/>} />
+<Route path='/Coding' element={<Coding setDisplayNav={setDisplayNav}/>} />
 </Routes>
 
 

@@ -1,14 +1,17 @@
 import React from "react";
-import "./navbar.css";
+import "../css/navbar.css";
 import { Link } from "react-router-dom";
 
 
-export default function NavBar() {
-let user = JSON.parse(localStorage.getItem('user-info'))
-console.warn(user)
+export default function NavBar({displayNav}) {
+
   return (
+    
     <div className="nav">
-      <Link to="/" className="logo-name">
+      {
+        displayNav?   
+        <>
+        <Link to="/" className="logo-name">
         Switch Code
       </Link>
       <ul>
@@ -18,12 +21,17 @@ console.warn(user)
         <li className="btnSignup">
           <Link to="/Signup" className="nav-signup">Signup</Link>
         </li>
-        <li className="profile">
-          profile
-     
-        </li>
+      
+       
 
       </ul>
+        </>
+        :
+        <></>
+
+
+      }
+      
     </div>
   );
 }
